@@ -1,0 +1,44 @@
+version: '3'
+
+services:
+  nginx:
+    image: nginx:1.15
+    ports:
+      - 8080:80
+    volumes:
+      - ${APP_PATH_HOST}:${APP_PATH_CONTAINER}
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/logs:/var/log/nginx
+    depends_on:
+      - php
+
+  php:
+    image: php:7.1-fpm
+    volumes:
+      - ${APP_PATH_HOST}:${APP_PATH_CONTAINER}
+    environment:
+      - API_TOKEN=${API_TOKEN}
+      - BOT_EXAMPLE=${BOT_EXAMPLE}
+
+  ngrok:
+    container_name: ngrok
+    ports:
+      - "0.0.0.0:4040:4040"
+    image: wernight/ngrok
+    links:
+      - "nginx"
+    environment:
+      - NGROK_PORT=nginx:80
+      - NGROK_BINDTLS=true
+
+  composer:
+    image: composer:1.8
+    volumes:
+      - ${APP_PATH_HOST}:${APP_PATH_CONTAINER}
+    working_dir: ${APP_PATH_CONTAINER}
+    depends_on:
+      - ngrok
+    command: composer install
+    environment:
+      - API_TOKEN=${API_TOKEN}
+      - WH_FROM_NGROK=yes

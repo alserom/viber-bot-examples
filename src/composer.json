@@ -1,0 +1,19 @@
+{
+    "require": {
+        "alserom/viber-php": "dev-master",
+        "kriswallsmith/buzz": "^1.0",
+        "nyholm/psr7": "^1.1",
+        "nyholm/psr7-server": "^0.3.0",
+        "zendframework/zend-httphandlerrunner": "^1.1",
+        "monolog/monolog": "^1.24"
+    },
+    "scripts": {
+        "post-autoload-dump": "@php setup-auto.php",
+        "setup": "@php setup.php"
+    },
+    "config": {
+        "preferred-install": {
+            "alserom/viber-php": "dist"
+        }
+    }
+}
